@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Blue Hibiscus</title>
+    <style>
+      /* -----------------------------
+             BLUE HIBISCUS — Minimal Landing
+             Light/Dark auto via prefers-color-scheme
+             Optional manual toggle button included
+          ------------------------------ */
+
+      /* Light thougths and dark thoughts depending on the theme */
+
+      :root {
+        --bg: #f7f7f8;
+        --surface: rgba(255, 255, 255, 0.7);
+        --surface-strong: rgba(255, 255, 255, 0.86);
+        --text: #0f172a;
+        --muted: rgba(15, 23, 42, 0.65);
+        --border: rgba(15, 23, 42, 0.12);
+        --shadow: 0 18px 50px rgba(2, 6, 23, 0.1);
+        --primary: #0b3a63; /* deep blue */
+        --primary-contrast: #ffffff;
+        --ring: rgba(11, 58, 99, 0.25);
+
+        --container: 980px;
+        --radius: 18px;
+        --pad: 28px;
+
+        --hibiscus-color: rgba(11, 58, 99, 0.18);
+        --hibiscus-blur: 0px;
+        --hibiscus-size: min(88vmin, 780px);
+        --hibiscus-x: 70%;
+        --hibiscus-y: 36%;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #070b13;
+          --surface: rgba(15, 23, 42, 0.52);
+          --surface-strong: rgba(15, 23, 42, 0.64);
+          --text: #eaf0ff;
+          --muted: rgba(234, 240, 255, 0.68);
+          --border: rgba(234, 240, 255, 0.14);
+          --shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+          --primary: #eaf0ff;
+          --primary-contrast: #070b13;
+          --ring: rgba(234, 240, 255, 0.22);
+
+          --hibiscus-color: rgba(142, 192, 255, 0.16);
+          --hibiscus-blur: 0px;
+        }
+      }
+
+      /* Manual theme override */
+      html[data-theme="light"] {
+        color-scheme: light;
+      }
+      html[data-theme="dark"] {
+        color-scheme: dark;
+        --bg: #070b13;
+        --surface: rgba(15, 23, 42, 0.52);
+        --surface-strong: rgba(15, 23, 42, 0.64);
+        --text: #eaf0ff;
+        --muted: rgba(234, 240, 255, 0.68);
+        --border: rgba(234, 240, 255, 0.14);
+        --shadow: 0 18px 60px rgba(0, 0, 0, 0.55);
+        --primary: #eaf0ff;
+        --primary-contrast: #070b13;
+        --ring: rgba(234, 240, 255, 0.22);
+        --hibiscus-color: rgba(142, 192, 255, 0.16);
+        --hibiscus-blur: 0px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto,
+          Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        background: var(--bg);
+        color: var(--text);
+        overflow-x: hidden;
+      }
+
+      /* Subtle page glow (very minimal) */
+      body::before {
+        content: "";
+        position: fixed;
+        inset: -20vmax;
+        pointer-events: none;
+        background: radial-gradient(
+            closest-side,
+            rgba(58, 164, 255, 0.1),
+            transparent 60%
+          ),
+          radial-gradient(closest-side, rgba(11, 58, 99, 0.1), transparent 65%);
+        filter: blur(18px);
+        opacity: 0.7;
+        z-index: 0;
+        transform: translate3d(0, 0, 0);
+      }
+
+      /* Big hibiscus watermark using inline SVG */
+      body::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+
+        /* Simple hibiscus-like SVG (minimal, scalable) */
+        background-image: url("./blueHibiscus6.png");
+
+        /* Tint & soften using filters */
+        filter: blur(var(--hibiscus-blur));
+        opacity: 1;
+        mix-blend-mode: multiply;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        body::after {
+          mix-blend-mode: screen;
+        }
+      }
+      html[data-theme="dark"] body::after {
+        mix-blend-mode: screen;
+      }
+
+      /* Re-tint the SVG stroke by overlay color */
+      /* We fake tint by placing a colored layer over the SVG */
+      .hibiscus-tint {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: 0;
+        background: radial-gradient(
+          circle at var(--hibiscus-x) var(--hibiscus-y),
+          var(--hibiscus-color) 0%,
+          transparent 58%
+        );
+      }
+
+      .wrap {
+        position: relative;
+        z-index: 1;
+        min-height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      header {
+        width: 100%;
+        max-width: var(--container);
+        padding: 22px 18px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        font-size: 12px;
+        color: var(--muted);
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--primary);
+        box-shadow: 0 0 0 6px var(--ring);
+      }
+
+      nav {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .ghost-btn {
+        appearance: none;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--text);
+        padding: 10px 12px;
+        border-radius: 999px;
+        font-size: 13px;
+        cursor: pointer;
+        transition: transform 0.12s ease, background 0.12s ease,
+          border-color 0.12s ease;
+      }
+      .ghost-btn:hover {
+        background: rgba(127, 127, 127, 0.08);
+        transform: translateY(-1px);
+      }
+
+      main {
+        width: 100%;
+        max-width: var(--container);
+        padding: 46px 18px 34px;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 22px;
+        align-items: start;
+      }
+
+      .hero {
+        padding: 8px 0 0;
+        text-align: left;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        font-size: clamp(42px, 6.2vw, 84px);
+        line-height: 1.02;
+      }
+
+      .tagline {
+        margin: 14px 0 0;
+        font-size: clamp(16px, 2.1vw, 20px);
+        color: var(--muted);
+        max-width: 52ch;
+      }
+
+      .composer {
+        margin-top: 18px;
+        border: 1px solid var(--border);
+        background: var(--surface);
+        box-shadow: var(--shadow);
+        border-radius: var(--radius);
+        padding: var(--pad);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      .composer-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 14px;
+      }
+
+      .prompt {
+        font-size: 13px;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--muted);
+      }
+
+      .counter {
+        font-size: 12px;
+        color: var(--muted);
+        font-variant-numeric: tabular-nums;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 160px;
+        resize: vertical;
+        border-radius: 14px;
+        border: 1px solid var(--border);
+        background: var(--surface-strong);
+        color: var(--text);
+        padding: 14px 14px;
+        font-size: 16px;
+        line-height: 1.55;
+        outline: none;
+        transition: box-shadow 0.12s ease, border-color 0.12s ease;
+      }
+      textarea:focus {
+        border-color: rgba(99, 160, 255, 0.45);
+        box-shadow: 0 0 0 6px var(--ring);
+      }
+      textarea::placeholder {
+        color: rgba(127, 127, 127, 0.65);
+      }
+
+      .actions {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+      }
+
+      .primary-btn {
+        appearance: none;
+        border: 1px solid var(--border);
+        background: var(--primary);
+        color: var(--primary-contrast);
+        padding: 12px 16px;
+        border-radius: 999px;
+        font-size: 14px;
+        letter-spacing: 0.03em;
+        cursor: pointer;
+        transition: transform 0.12s ease, filter 0.12s ease, opacity 0.12s ease;
+      }
+      .primary-btn:hover {
+        transform: translateY(-1px);
+        filter: brightness(1.02);
+      }
+      .primary-btn:active {
+        transform: translateY(0px);
+        opacity: 0.95;
+      }
+
+      .hint {
+        color: var(--muted);
+        font-size: 13px;
+        max-width: 55ch;
+      }
+
+      .extra {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 13px;
+        color: var(--muted);
+      }
+
+      .chip {
+        border: 1px solid var(--border);
+        background: transparent;
+        padding: 8px 10px;
+        border-radius: 999px;
+        cursor: pointer;
+        user-select: none;
+        transition: background 0.12s ease, transform 0.12s ease;
+      }
+      .chip:hover {
+        background: rgba(127, 127, 127, 0.08);
+        transform: translateY(-1px);
+      }
+
+      footer {
+        width: 100%;
+        max-width: var(--container);
+        padding: 18px 18px 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .links {
+        display: flex;
+        gap: 14px;
+      }
+      .links a {
+        color: var(--muted);
+        text-decoration: none;
+        border-bottom: 1px solid transparent;
+      }
+      .links a:hover {
+        color: var(--text);
+        border-bottom-color: rgba(127, 127, 127, 0.35);
+      }
+
+      /* Slightly more “large minimal” on wide screens */
+      @media (min-width: 900px) {
+        main {
+          padding-top: 60px;
+          gap: 26px;
+        }
+        .composer {
+          padding: 34px;
+        }
+        textarea {
+          min-height: 190px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="hibiscus-tint" aria-hidden="true"></div>
+
+    <div class="wrap">
+      <header>
+        <div class="brand">
+          <span class="dot" aria-hidden="true"></span>
+          <span>Blue Hibiscus</span>
+        </div>
+
+        <nav>
+          <button
+            class="ghost-btn"
+            id="themeToggle"
+            type="button"
+            aria-label="Toggle theme"
+          >
+            Toggle theme
+          </button>
+        </nav>
+      </header>
+
+      <main>
+        <section class="hero">
+          <h1>BLUE HIBISCUS</h1>
+          <p class="tagline">
+            Thoughts becoming reality — one quiet sentence at a time.
+          </p>
+
+          <div class="composer" role="region" aria-label="Thought composer">
+            <div class="composer-top">
+              <div class="prompt">Write</div>
+              <div class="counter"><span id="count">0</span>/280</div>
+            </div>
+
+            <textarea
+              id="thought"
+              maxlength="280"
+              placeholder="Write anything. A thought, a prayer, a plan, a promise…"
+            ></textarea>
+
+            <div class="actions">
+              <button class="primary-btn" id="bring" type="button">
+                Bring to reality
+              </button>
+
+              <div class="extra">
+                <span class="chip" id="addBloom" role="button" tabindex="0"
+                  >+ Bloom</span
+                >
+                <span class="chip" id="addIntent" role="button" tabindex="0"
+                  >+ Intention</span
+                >
+                <span class="chip" id="clear" role="button" tabindex="0"
+                  >Clear</span
+                >
+              </div>
+
+              <div class="hint">
+                Minimal now, expandable later: you can store posts locally or
+                send them to an API when you’re ready.
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>
+        <div>© <span id="year"></span> Blue Hibiscus</div>
+        <div class="links">
+          <a href="#top">Home</a>
+          <a href="#about">About</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </footer>
+    </div>
+
+    <script>
+      // Small, practical JS for the demo UI (optional to keep)
+      const el = (id) => document.getElementById(id);
+
+      el("year").textContent = new Date().getFullYear();
+
+      const thought = el("thought");
+      const count = el("count");
+
+      const updateCount = () => {
+        count.textContent = thought.value.length;
+      };
+      thought.addEventListener("input", updateCount);
+      updateCount();
+
+      // Theme toggle (stores preference)
+      const toggle = el("themeToggle");
+      const key = "bluehibiscus-theme";
+
+      const applyTheme = (t) => {
+        if (!t) {
+          document.documentElement.removeAttribute("data-theme");
+          localStorage.removeItem(key);
+          return;
+        }
+        document.documentElement.setAttribute("data-theme", t);
+        localStorage.setItem(key, t);
+      };
+
+      const saved = localStorage.getItem(key);
+      if (saved === "light" || saved === "dark") applyTheme(saved);
+
+      toggle.addEventListener("click", () => {
+        const current = document.documentElement.getAttribute("data-theme");
+        if (!current) {
+          // If no manual theme, flip opposite of system preference
+          const prefersDark =
+            window.matchMedia &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches;
+          applyTheme(prefersDark ? "light" : "dark");
+        } else {
+          applyTheme(current === "dark" ? "light" : "dark");
+        }
+      });
+
+      // Minimal “creative” chips
+      const insertLine = (text) => {
+        const v = thought.value.trim();
+        const next = (v ? v + "\n" : "") + text;
+        thought.value = next.slice(0, thought.maxLength);
+        thought.focus();
+        updateCount();
+      };
+
+      el("addBloom").addEventListener("click", () => insertLine("Bloom."));
+      el("addIntent").addEventListener("click", () =>
+        insertLine("With intention.")
+      );
+      el("clear").addEventListener("click", () => {
+        thought.value = "";
+        thought.focus();
+        updateCount();
+      });
+
+      // “Bring to reality” demo action
+      el("bring").addEventListener("click", () => {
+        const v = thought.value.trim();
+        if (!v) return;
+        // For now we just show a tiny confirmation.
+        // Later you can POST to an API, save to DB, or localStorage.
+        alert("Saved:\n\n" + v);
+      });
+    </script>
+  </body>
+</html>
