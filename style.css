@@ -1,3 +1,101 @@
+@import url("https://fonts.googleapis.com/css2?family=Libre+Caslon+Display&display=swap");
+
 body {
-    background-color: darkblue;
+  background-color: rgb(5, 5, 31);
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  font-size: 80px;
+  color: rgb(208, 0, 255);
+  background-color: rgb(35, 82, 122);
+  text-align: center;
+  border-radius: 50%;
+  padding: 20px;
+  text-shadow: 0 0 5px #fff, 0 0 10px #00e5ff, 0 0 20px #00e5ff,
+    0 0 40px #00e5ff;
+}
+
+.avatar {
+  width: 320px; /* resize */
+  height: 240px; /* different width/height => oval */
+  object-fit: cover; /* crop nicely instead of stretching */
+  border-radius: 50%; /* makes it an oval/circle */
+  display: flex; /* avoids baseline gap */
+}
+
+.full-bg {
+  background-image: url("photo.jpg");
+  background-size: cover; /* fills screen */
+  background-position: center;
+  background-repeat: ;
+}
+
+.shiny {
+  font-size: 80px;
+  font-weight: bold;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.shiny::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.8),
+    transparent
+  );
+  animation: shine 2.5s infinite;
+}
+
+@keyframes shine {
+  100% {
+    left: 100%;
+  }
+}
+
+.shiny {
+  color: darkmagenta;
+  font-weight: bold;
+  background: linear-gradient(120deg, #f5f5f5, #ffffff, #bfbfbf, #ffffff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.sparkle-text {
+  font-size: 200px;
+  font-weight: bold;
+  color: rgb(25, 13, 115);
+  text-shadow: 0 0 5px #fff, 0 0 10px #00e5ff, 0 0 20px #00e5ff;
+  animation: sparkle 1.5s infinite alternate;
+}
+
+@keyframes sparkle {
+  from {
+    text-shadow: 0 0 5px #fff, 0 0 10px #00e5ff, 0 0 20px #00e5ff;
+  }
+  to {
+    text-shadow: 0 0 8px #fff, 0 0 16px #7df9ff, 0 0 30px #7df9ff;
+  }
+}
+
+header h1 {
+  font-family: "Libre Caslon Display", serif;
+  font-weight: 400;
+  font-style: normal;
 }
